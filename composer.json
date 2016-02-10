@@ -1,0 +1,24 @@
+{
+    "name": "rafalniewinski/silex-steamauth",
+    "type": "library",
+    "description": "Steam Community authorizaion provider for Silex with SecurityServiceProvider",
+    "keywords": ["steam","auth","silex","symfony","authorization","openid"],
+    "homepage": "https://github.com/RafalNiewinski/Silex-SteamAuth",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Rafal Niewinski",
+            "email": "kontakt@rafaln.pl"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.9",
+        "silex/silex": "~1.3",
+        "symfony/security": "^2.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "SteamAuth\\": "src/"
+        }
+    }
+}
