@@ -2,7 +2,9 @@
 
 namespace SteamAuth;
 
-interface SteamAuthUserProviderInterface
+use Symfony\Component\Security\Core\User\UserProviderInterface;
+
+interface SteamAuthUserProviderInterface extends UserProviderInterface
 {
-    function loadUserBySteamId($steamid);
+    public function loadUserBySteamId($steamid);
 }
