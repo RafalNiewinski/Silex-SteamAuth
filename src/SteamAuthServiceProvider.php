@@ -3,7 +3,7 @@
 namespace SteamAuth;
 
 use Silex\Application;
-use Silex\ServiceProviderInterface;
+use Pimple\ServiceProviderInterface;
 
 require_once __DIR__ . '/openid.php';
 require_once __DIR__ . '/SteamAuthProvider.php';
@@ -12,16 +12,16 @@ require_once __DIR__ . '/SteamAuthListener.php';
 class SteamAuthServiceProvider implements ServiceProviderInterface
 {
 
-    public function register(Application $app)
+    public function register(\Pimple\Container $app)
     {
-        $app['steam_auth'] = $app->share(function () use ($app)
+        $app['steam_auth'] = function () use ($app)
         {
             $openid = new \LightOpenID($app['steam_auth.host']);
             $openid->identity = 'http://steamcommunity.com/openid';
-            
+
             return $openid;
-        });
-        
+        };
+
         $app['security.authentication_listener.factory.steam_auth'] = $app->protect(function ($name, $options) use ($app)
         {
             $options = array_replace_recursive(array(
@@ -40,16 +40,16 @@ class SteamAuthServiceProvider implements ServiceProviderInterface
             // define the authentication provider object
             if (!isset($app['security.authentication_provider.' . $name . '.steam_auth']))
             {
-                $app['security.authentication_provider.' . $name . '.steam_auth'] = $app->share(function () use ($app, $name)
+                $app['security.authentication_provider.' . $name . '.steam_auth'] = function () use ($app, $name)
                 {
                     return new SteamAuthProvider($app['security.user_provider.' . $name]);
-                });
+                };
             }
-            
+
             // define the authentication listener object
             if (!isset($app['security.authentication_listener.'.$name.'.steam_auth']))
             {
-                $app['security.authentication_listener.'.$name.'.steam_auth'] = $app->share(function () use ($app, $name, $options) {
+                $app['security.authentication_listener.'.$name.'.steam_auth'] = function () use ($app, $name, $options) {
                     return new SteamAuthListener(
                         $app['steam_auth'],
                         $app['security.token_storage'],
@@ -63,17 +63,17 @@ class SteamAuthServiceProvider implements ServiceProviderInterface
                         $app['logger'],
                         $app['dispatcher']
                     );
-                });
+                };
             }
-            
+
             $bindName = "steam_auth_{$name}_";
             $app->match($options['check_path'], function() {})->bind($bindName . 'check');
-            
+
             $app->match('/login', function () use ($app, $bindName)
             {
                 return $app->redirect($app['url_generator']->generate($bindName . 'check'));
             });
-            
+
             return array(
                 //Authentication Provider ID
                 'security.authentication_provider.'.$name.'.steam_auth',
@@ -86,9 +86,4 @@ class SteamAuthServiceProvider implements ServiceProviderInterface
             );
         });
     }
-
-    public function boot(Application $app)
-    {
-    }
-
 }

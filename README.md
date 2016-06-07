@@ -1,4 +1,5 @@
-##### This version is for Silex ~1.3
+##### This version is for Silex ~2.0
+###### (version for Silex ~1.3 is available in another branch)
 # Silex-SteamAuth
 Steam Community authorizaion provider for Silex PHP framework with SecurityServiceProvider.
 
@@ -6,7 +7,7 @@ Steam Community authorizaion provider for Silex PHP framework with SecurityServi
 If you want to install with Composer:
 
 ```
-composer require rafalniewinski/silex-steamauth "~1.0"
+composer require rafalniewinski/silex-steamauth "~2.0"
 ```
 
 Alternatively, you can clone this repository:
